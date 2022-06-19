@@ -2083,9 +2083,13 @@ void Reconstruction::SetObservationAsTriangulated(
   if (correspondence_graph_ == nullptr) {
     return;
   }
+  if (!correspondence_graph_->ExistsImage(image_id)) {
+    return; // Fix unknown crash
+  }
 
   const class Image& image = Image(image_id);
   const Point2D& point2D = image.Point2D(point2D_idx);
+
   const std::vector<CorrespondenceGraph::Correspondence>& corrs =
       correspondence_graph_->FindCorrespondences(image_id, point2D_idx);
 
