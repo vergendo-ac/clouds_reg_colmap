@@ -247,11 +247,11 @@ std::mutex Database::update_schema_mutex_;
 
 Database::Database() : database_(nullptr) {}
 
-Database::Database(const std::string& path) : Database() { Open(path); }
+Database::Database(const std::string& path, bool read_only) : Database() { Open(path, read_only); }
 
 Database::~Database() { Close(); }
 
-void Database::Open(const std::string& path) {
+void Database::Open(const std::string& path, bool read_only) {
   Close();
 
   // SQLITE_OPEN_NOMUTEX specifies that the connection should not have a
@@ -260,7 +260,8 @@ void Database::Open(const std::string& path) {
   // connections can read concurrently.
   SQLITE3_CALL(sqlite3_open_v2(
       path.c_str(), &database_,
-      SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX,
+      (read_only ? SQLITE_OPEN_READONLY:
+      SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) | SQLITE_OPEN_NOMUTEX,
       nullptr));
 
   // Don't wait for the operating system to write the changes to disk
@@ -278,8 +279,10 @@ void Database::Open(const std::string& path) {
   // Enable auto vacuum to reduce DB file size
   SQLITE3_EXEC(database_, "PRAGMA auto_vacuum=1", nullptr);
 
-  CreateTables();
-  UpdateSchema();
+  if (!read_only) {
+    CreateTables();
+    UpdateSchema();
+  }
   PrepareSQLStatements();
 }
 

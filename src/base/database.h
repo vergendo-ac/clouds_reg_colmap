@@ -63,12 +63,12 @@ class Database {
   const static size_t kMaxNumImages;
 
   Database();
-  explicit Database(const std::string& path);
+  explicit Database(const std::string& path, bool read_only = false);
   ~Database();
 
   // Open and close database. The same database should not be opened
   // concurrently in multiple threads or processes.
-  void Open(const std::string& path);
+  void Open(const std::string& path, bool read_only = false);
   void Close();
 
   // Check if entry already exists in database. For image pairs, the order of
