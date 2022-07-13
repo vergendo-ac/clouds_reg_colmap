@@ -35,6 +35,12 @@
 #include <string>
 #include <vector>
 
+#ifdef WIN32
+#define NOMINMAX
+#undef min
+#undef max
+#endif
+
 namespace colmap {
 
 // Format string by replacing embedded format specifiers with their respective

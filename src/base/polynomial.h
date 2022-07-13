@@ -32,6 +32,12 @@
 #ifndef COLMAP_SRC_BASE_POLYNOMIAL_H_
 #define COLMAP_SRC_BASE_POLYNOMIAL_H_
 
+#ifdef WIN32
+#define NOMINMAX
+#undef min
+#undef max
+#endif
+
 #include <Eigen/Core>
 
 namespace colmap {

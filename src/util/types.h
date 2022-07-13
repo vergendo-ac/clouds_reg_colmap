@@ -59,6 +59,12 @@ typedef unsigned __int64 uint64_t;
 
 #include <Eigen/Core>
 
+#ifdef WIN32
+#define NOMINMAX
+#undef min
+#undef max
+#endif
+
 namespace Eigen {
 
 typedef Eigen::Matrix<float, 3, 4> Matrix3x4f;
